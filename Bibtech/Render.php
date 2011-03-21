@@ -17,7 +17,7 @@ function bibtech_msg( $msg = "" ) {
   return "nan";
 }
 
-function bibtech_render( $barr = None, $args = None ) {
+function bibtech_render( $barr = NULL, $args = NULL ) {
   global $wgScriptPath;
   // load Style class implementing call.type
   $no  = 1;
@@ -71,7 +71,7 @@ function bibtech_render( $barr = None, $args = None ) {
   return $out;
 }
 
-function bibtech_id( $args = None ) {
+function bibtech_id( $args = NULL ) {
   if( ! isset( $args["prefix"] ) )
     return "bibtech_";
 
@@ -80,7 +80,7 @@ function bibtech_id( $args = None ) {
 }
 
 
-function bibtech_sty_begin( $args = None ) {
+function bibtech_sty_begin( $args = NULL ) {
   $id   = bibtech_id( $args );
   $ret  = '<div id="' . $id . "\">\n";
   $ret .= "<h3><span class=\"mw-headline\">";
@@ -89,12 +89,12 @@ function bibtech_sty_begin( $args = None ) {
   return $ret;
 }
 
-function bibtech_sty_end( $args = None ) {
+function bibtech_sty_end( $args = NULL ) {
   return "</div>";
 }
 
 
-function bibtech_sty_entry_begin( $ckey, $arr = None, $args = None ) {
+function bibtech_sty_entry_begin( $ckey, $arr = NULL, $args = NULL ) {
   $id   = bibtech_id( $args ) . "_" . $ckey;
   $ret .= '<div class="bibtech_entry">';
   $ret .= "<a name=\"" . $id . "\"></a>";
@@ -103,7 +103,7 @@ function bibtech_sty_entry_begin( $ckey, $arr = None, $args = None ) {
   return $ret;
 }
 
-function bibtech_sty_entry_end( $ckey, $arr = None, $args = None ) {
+function bibtech_sty_entry_end( $ckey, $arr = NULL, $args = NULL ) {
   return "</div></div>\n";
 }
 

@@ -32,6 +32,7 @@ function bibtech_sty_format_volume( $str ) {
 function bibtech_sty_entry_article( $arr ) {
   $fields = array( "author", "journal", "volume", "pages", "year", "url" );
   $first  = true;
+  $out = "";
 
   foreach( $fields as $f ) {
     if( ! isset( $arr[$f] ) || trim( $arr[$f] ) == "" )

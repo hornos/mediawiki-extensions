@@ -16,7 +16,7 @@ function bibtech_parser_ttc( $line = "" ) {
 
 /// \fn bibtech_parse
 /// \brief parser
-function bibtech_parser( $input, $args = None ) {
+function bibtech_parser( $input, $args = NULL ) {
   $iarr  = explode( "\n", $input );
   $state = "";
   $tarr  = array();
