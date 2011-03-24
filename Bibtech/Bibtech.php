@@ -12,7 +12,7 @@ require_once( "Render.php" );
 ///
 /// TODO: tag array
 $wgBibtechSortBy = "ckey";
-
+$wgBibtechCkeys  = array();
 
 // register
 $wgExtensionCredits['validextensionclass'][] = array(
@@ -24,26 +24,41 @@ $wgExtensionCredits['validextensionclass'][] = array(
 
 // tag extensions
 $wgHooks['ParserFirstCallInit'][] = 'w_bt_pfci';
+// parser extension
+$wgHooks['LanguageGetMagic'][] = 'w_bt_lgm';
+
 
 function w_bt_pfci( &$parser ) {
-  $parser->setHook( 'bibtech', 'w_bt_parser' );
+  $parser->setHook( 'bibtech', 'w_bt_tparser' );
+  $parser->setFunctionHook( 'btref', 'w_bt_mparser' );
   return true;
 }
 
-/// \fn w_bt_parser
-/// \brief parser hook
+function w_bt_lgm( &$magicWords, $langCode ) {
+  $magicWords['btref'] = array( 0, 'btref' );
+  return true;
+}
+
+
+/// \fn w_bt_tparser
+/// \brief tag parser hook
 ///
 /// TODO:
 /// latex special chars
 /// TODO args:
 /// src: external file
 /// sty: .sty based styling 
-function w_bt_parser( $input, $args, $parser, $frame ) {
+function w_bt_tparser( $input, $args, $parser, $frame ) {
   global $wgBibtechSortBy;
 
   if( isset( $args["sortby"] ) ) {
     $wgBibtechSortBy = bibtech_str( $args["sortby"] );
   }
-  return bibtech_render( bibtech_sort( bibtech_parser( $input ) ), $args );
+  return bibtech_trender( bibtech_tsort( bibtech_tparser( $input ) ), $args );
 }
+
+function w_bt_mparser( $parser, $arg1 = NULL, $arg2 = NULL ) {
+  return bibtech_mrender( $parser, $arg1, $arg2 );
+}
+
 ?>

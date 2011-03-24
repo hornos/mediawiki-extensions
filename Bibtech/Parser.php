@@ -16,7 +16,7 @@ function bibtech_parser_ttc( $line = "" ) {
 
 /// \fn bibtech_parse
 /// \brief parser
-function bibtech_parser( $input, $args = NULL ) {
+function bibtech_tparser( $input, $args = NULL ) {
   $iarr  = explode( "\n", $input );
   $state = "";
   $tarr  = array();
@@ -84,7 +84,7 @@ function bibtech_cmp( $a, $b ) {
 
 /// \fn bibtech_sort
 /// \brief sort bib array by a tag
-function bibtech_sort( $barr ) {
+function bibtech_tsort( $barr ) {
   uasort( $barr, "bibtech_cmp" );
   return $barr;
 }
