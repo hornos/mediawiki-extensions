@@ -3,20 +3,20 @@ if( !defined( 'MEDIAWIKI' ) ) die();
 
 /// \fn bibtech_str
 /// \brief safe string
-function bibtech_str( $str = "" ) {
+function bt_str( $str = "" ) {
   return preg_replace( '/[^a-zA-Z0-9_]/', "", $str );
 }
 
 /// \fn bibtech_ttc
 /// \brief replace trailing coma
-function bibtech_parser_ttc( $line = "" ) {
+function bt_ttc( $line = "" ) {
   return preg_replace( "/,[[:space:]]*$/", "", $line );
 }
 
 
 /// \fn bibtech_parse
 /// \brief parser
-function bibtech_tparser( $input, $args = NULL ) {
+function bt_tag( $input, $args = NULL ) {
   $iarr  = explode( "\n", $input );
   $state = "";
   $tarr  = array();
@@ -56,7 +56,7 @@ function bibtech_tparser( $input, $args = NULL ) {
 
     // 4. process tags
     if( $state == "entry" ) {
-      $larr = explode( "=", bibtech_parser_ttc( $line ), 2 );
+      $larr = explode( "=", bt_ttc( $line ), 2 );
       $tag  = trim( $larr[0] );
       $val  = trim( preg_replace( '/[\{\}]/', "", $larr[1] ) );
       $tarr[$tag] = $val;
@@ -73,7 +73,7 @@ function bibtech_tparser( $input, $args = NULL ) {
 
 /// \fn bibtech_cmp
 /// \brief comparator by tag
-function bibtech_cmp( $a, $b ) {
+function bt_cmp( $a, $b ) {
   global $wgBibtechSortBy;
   $tag = $wgBibtechSortBy;
   $ta  = strtolower( $a[$tag] );
@@ -84,7 +84,7 @@ function bibtech_cmp( $a, $b ) {
 
 /// \fn bibtech_sort
 /// \brief sort bib array by a tag
-function bibtech_tsort( $barr ) {
+function bt_s_tag( $barr ) {
   uasort( $barr, "bibtech_cmp" );
   return $barr;
 }

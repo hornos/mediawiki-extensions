@@ -2,26 +2,36 @@
 if( !defined( 'MEDIAWIKI' ) ) die();
 
 /// custom
-function bibtech_sty_format_author( $str ) {
+function bt_r_frm_author( $str ) {
   $str = preg_replace( "/[[:space:]]*,[[:space:]]*/", " ", $str );
   $str = preg_replace( "/[[:space:]]+and[[:space:]]+/", ", ", $str );
+  $short = "";
+  $arr = explode( ",", $str );
+  foreach( $arr as $nam ) {
+    $narr = explode( " ", $nam );
+    $last = array_pop( $narr );
+    foreach( $narr as $ni ) {
+      $short .= strtoupper( $ni[0] ) . ". ";
+    }
+    $short .= $last . ", ";
+  }
   // TODO: latex spec chars -> html spec chars
-  return $str;
+  return $short;
 }
 
-function bibtech_sty_format_pages( $str ) {
+function bt_r_frm_pages( $str ) {
   return str_replace( "--", "-", $str );
 }
 
-function bibtech_sty_format_year( $str ) {
+function bt_r_frm_year( $str ) {
   return "(" . $str . ")";
 }
 
-function bibtech_sty_format_url( $str ) {
+function bt_r_frm_url( $str ) {
   return '<a target="_new" href="' . $str . '">link</a>';
 }
 
-function bibtech_sty_format_volume( $str ) {
+function bt_r_frm_volume( $str ) {
   return '<b>' . $str . '</b>';
 }
 
@@ -29,7 +39,7 @@ function bibtech_sty_format_volume( $str ) {
 ///     An article from a journal or magazine.
 ///     Required fields: author, title, journal, year
 ///     Optional fields: volume, number, pages, month, note, key
-function bibtech_sty_entry_article( $arr ) {
+function bt_r_entry_article( $arr ) {
   $fields = array( "author", "journal", "volume", "pages", "year", "url" );
   $first  = true;
   $out = "";
@@ -43,7 +53,7 @@ function bibtech_sty_entry_article( $arr ) {
     else
       $first = false;
 
-    $out .= bibtech_sty_format( $f, $arr[$f] );
+    $out .= bt_r_frm( $f, $arr[$f] );
   }
   return $out;
 }

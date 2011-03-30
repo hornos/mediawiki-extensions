@@ -1,3 +1,10 @@
 div.bibtech_entry_no {
   float: left;
+  margin-right: 7px;
 }
+
+div.bibtech_entry {
+  margin-bottom: 2px;
+  font-size: 90%;
+}
+

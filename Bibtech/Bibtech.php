@@ -23,24 +23,24 @@ $wgExtensionCredits['validextensionclass'][] = array(
 );
 
 // tag extensions
-$wgHooks['ParserFirstCallInit'][] = 'w_bt_pfci';
+$wgHooks['ParserFirstCallInit'][] = 'wg_bt_pfci';
 // parser extension
-$wgHooks['LanguageGetMagic'][] = 'w_bt_lgm';
+$wgHooks['LanguageGetMagic'][] = 'wg_bt_lgm';
 
 
-function w_bt_pfci( &$parser ) {
-  $parser->setHook( 'bibtech', 'w_bt_tparser' );
-  $parser->setFunctionHook( 'btref', 'w_bt_mparser' );
+function wg_bt_pfci( &$parser ) {
+  $parser->setHook( 'bibtech', 'wg_bt_tag' );
+  $parser->setFunctionHook( 'btref', 'wg_bt_m_btref' );
   return true;
 }
 
-function w_bt_lgm( &$magicWords, $langCode ) {
+function wg_bt_lgm( &$magicWords, $langCode ) {
   $magicWords['btref'] = array( 0, 'btref' );
   return true;
 }
 
 
-/// \fn w_bt_tparser
+/// \fn wg_bt_tag
 /// \brief tag parser hook
 ///
 /// TODO:
@@ -48,17 +48,19 @@ function w_bt_lgm( &$magicWords, $langCode ) {
 /// TODO args:
 /// src: external file
 /// sty: .sty based styling 
-function w_bt_tparser( $input, $args, $parser, $frame ) {
+function wg_bt_tag( $input, $args, $parser, $frame ) {
   global $wgBibtechSortBy;
 
   if( isset( $args["sortby"] ) ) {
-    $wgBibtechSortBy = bibtech_str( $args["sortby"] );
+    $wgBibtechSortBy = bt_str( $args["sortby"] );
   }
-  return bibtech_trender( bibtech_tsort( bibtech_tparser( $input ) ), $args );
+  // parse sort render
+  return bt_r_tag( bt_s_tag( bt_tag( $input ) ), $args );
 }
 
-function w_bt_mparser( $parser, $arg1 = NULL, $arg2 = NULL ) {
-  return bibtech_mrender( $parser, $arg1, $arg2 );
+function wg_bt_m_btref( $parser, $arg1 = NULL, $arg2 = NULL ) {
+  // render
+  return bt_r_m_btref( $parser, $arg1, $arg2 );
 }
 
 ?>
