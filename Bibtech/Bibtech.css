@@ -8,3 +8,6 @@ div.bibtech_entry {
   font-size: 90%;
 }
 
+span.bibtech_error {
+  color: red;
+}

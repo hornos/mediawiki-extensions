@@ -4,7 +4,7 @@ if( !defined( 'MEDIAWIKI' ) ) die();
 /// \fn bibtech_str
 /// \brief safe string
 function bt_str( $str = "" ) {
-  return preg_replace( '/[^a-zA-Z0-9_]/', "", $str );
+  return preg_replace( '/[^a-zA-Z0-9._]/', "", $str );
 }
 
 /// \fn bibtech_ttc
@@ -16,11 +16,14 @@ function bt_ttc( $line = "" ) {
 
 /// \fn bibtech_parse
 /// \brief parser
-function bt_tag( $input, $args = NULL ) {
+function bt_tag( $input = NULL, $args = NULL ) {
   $iarr  = explode( "\n", $input );
   $state = "";
   $tarr  = array();
   $barr  = array();
+
+  if( $input == NULL )
+    return $input;
 
   // line by line parse
   foreach( $iarr as $line ) {
@@ -71,22 +74,34 @@ function bt_tag( $input, $args = NULL ) {
 }
 
 
-/// \fn bibtech_cmp
-/// \brief comparator by tag
-function bt_cmp( $a, $b ) {
-  global $wgBibtechSortBy;
-  $tag = $wgBibtechSortBy;
-  $ta  = strtolower( $a[$tag] );
-  $tb  = strtolower( $b[$tag] );
-  return strcasecmp( $ta, $tb );
-}
+function bt_l_tag( $barr = NULL, $args = NULL ) {
+  global $wgBibtechBib;
+  $lbarr = array();
 
+  if( $barr == NULL )
+    return $barr;
 
-/// \fn bibtech_sort
-/// \brief sort bib array by a tag
-function bt_s_tag( $barr ) {
-  uasort( $barr, "bibtech_cmp" );
-  return $barr;
+  if( ! isset( $args["bib"] ) ) {
+    $bib = "page";
+  }
+  else {
+    $bib = bt_str( $args["bib"] );
+  }
+
+  if( ! isset( $wgBibtechBib[$bib] ) ) {
+    return NULL;
+  }
+
+  foreach( $wgBibtechBib[$bib]["ckeys"] as $ckey => $val ) {
+    if( ! isset( $barr[$ckey] ) ) {
+      $lbarr[$ckey] = array( "type" => "missing", "ckey" => $ckey );
+    }
+    else {
+      $lbarr[$ckey] = $barr[$ckey];
+    }
+    $lbarr[$ckey] = array_merge( $lbarr[$ckey], $val );
+  }
+  return $lbarr;
 }
 
 ?>

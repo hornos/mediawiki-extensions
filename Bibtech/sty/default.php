@@ -8,7 +8,7 @@ function bt_r_frm_author( $str ) {
   $short = "";
   $arr = explode( ",", $str );
   foreach( $arr as $nam ) {
-    $narr = explode( " ", $nam );
+    $narr = split( "/[[:space:]]+/", $nam );
     $last = array_pop( $narr );
     foreach( $narr as $ni ) {
       $short .= strtoupper( $ni[0] ) . ". ";
@@ -48,7 +48,7 @@ function bt_r_entry_article( $arr ) {
     if( ! isset( $arr[$f] ) || trim( $arr[$f] ) == "" )
       continue;
 
-    if( ! $first )
+    if( ! $first || $f != "author" )
       $out .= ", ";
     else
       $first = false;
@@ -58,6 +58,9 @@ function bt_r_entry_article( $arr ) {
   return $out;
 }
 
+function bt_r_entry_missing( $arr ) {
+  return bt_r_frm_err( bt_msg( "missing" ) . ": " . $arr["ckey"] );
+}
 /// book
 ///     A book with an explicit publisher.
 ///     Required fields: author/editor, title, publisher, year

@@ -14,12 +14,10 @@ function bt_msg( $msg = "" ) {
   if( isset( $dict[$msg] ) )
     return $dict[$msg];
 
-  return "nan";
+  return NULL;
 }
 
 function bt_r_tag( $barr = NULL, $args = NULL ) {
-  // TODO ckeys lookup
-  global $wgBibtechCkeys;
   global $wgScriptPath;
   // load Style class implementing call.type
   $no  = 1;
@@ -55,15 +53,19 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
   // EXECUTE {begin.bib}
   $out .= bt_r_tag_begin( $args );
 
-  // ITERATE {call.type$}
-  foreach( $barr as $ckey => $arr ) {
-    $arr["no"] = $no;
-    $ckey = bt_str( $ckey );
+  if( $barr == NULL ) {
+    $out .= "internal error";
+  }
+  else {
+    // ITERATE {call.type$}
+    foreach( $barr as $ckey => $arr ) {
 
+    $ckey = bt_str( $ckey );
     $out .= bt_r_entry_begin( $ckey, $arr, $args );
     $out .= bt_r_entry( $ckey, $arr, $args );
     $out .= bt_r_entry_end( $ckey, $arr, $args );
-    ++$no;
+
+    }
   }
 
   // EXECUTE {end.bib}
@@ -73,21 +75,38 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
   return $out;
 }
 
-function bt_m_btref( $parser, $ckey, $bib = NULL ) {
+function bt_r_m_btref( $parser, $ckey, $bib = NULL ) {
+  global $wgBibtechBib;
   $ckey = bt_str( $ckey );
   $bib  = bt_str( $bib );
-  $id  = bt_eid( $ckey, $bib == NULL ? NULL : array( "bib" => $bib ) );
-  $out = "<a href=\"#" . $id . "\">[link]</a>";
+  $id   = bt_eid( $ckey, $bib == NULL ? NULL : array( "bib" => $bib ) );
+
+  if( $bib == NULL )
+    $bib = "page";
+
+  if( ! isset( $wgBibtechBib[$bib] ) ) {
+    $wgBibtechBib[$bib] = array( "ckeys" => array(), "c" => 1 );
+  }
+
+  if( ! isset( $wgBibtechBib[$bib]["ckeys"][$ckey] ) ) {
+    $wgBibtechBib[$bib]["ckeys"][$ckey] = array( "rc" => 1, "no" => $wgBibtechBib[$bib]["c"] );
+    ++$wgBibtechBib[$bib]["c"];
+  }
+  else {
+    ++$wgBibtechBib[$bib]["ckeys"][$ckey]["rc"];
+  }
+
+  $out = "<a href=\"#" . $id . "\">[".$wgBibtechBib[$bib]["ckeys"][$ckey]["no"]."]</a>";
   return $parser->insertStripItem( $out, $parser->mStripState );
   // return array( $out, 'noparse' => true, 'isHTML' => true );
 }
 
 function bt_id( $args = NULL ) {
   if( ! isset( $args["bib"] ) )
-    return "bibtech";
+    return "bt";
 
   $id = bt_str( $args["bib"] );
-  return "bibtech_" . $id;
+  return "bt_" . $id;
 }
 
 function bt_eid( $ckey, $args = NULL ) {
@@ -137,7 +156,7 @@ function bt_r_frm( $tag, $str = "" ) {
   if( function_exists( $ffunc ) ) {
     $str = call_user_func_array( $ffunc, array( $str ) );
   }
-  return '<span class="bibtex_' . $tag . '">' . $str . '</span>';
+  return '<span class="bibtech_' . $tag . '">' . $str . '</span>';
 }
 
 
@@ -150,6 +169,10 @@ function bt_entry_r( $arr ) {
     $out .= "</div>";
   }
   return $out;
+}
+
+function bt_r_frm_err( $str ) {
+  return '<span class="bibtech_error">' . $str . '</span>';
 }
 
 ?>

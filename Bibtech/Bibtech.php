@@ -6,13 +6,9 @@ require_once( "Parser.php" );
 require_once( "Render.php" );
 // autoload
 
-// globals
-/// \var wgBibtechSortBy
-/// \brief sort by tag
-///
-/// TODO: tag array
-$wgBibtechSortBy = "ckey";
-$wgBibtechCkeys  = array();
+/// \var wgBibtechBib
+/// \brief lookup table for btref
+$wgBibtechBib = array();
 
 // register
 $wgExtensionCredits['validextensionclass'][] = array(
@@ -24,9 +20,9 @@ $wgExtensionCredits['validextensionclass'][] = array(
 
 // tag extensions
 $wgHooks['ParserFirstCallInit'][] = 'wg_bt_pfci';
+
 // parser extension
 $wgHooks['LanguageGetMagic'][] = 'wg_bt_lgm';
-
 
 function wg_bt_pfci( &$parser ) {
   $parser->setHook( 'bibtech', 'wg_bt_tag' );
@@ -39,28 +35,29 @@ function wg_bt_lgm( &$magicWords, $langCode ) {
   return true;
 }
 
-
 /// \fn wg_bt_tag
 /// \brief tag parser hook
 ///
-/// TODO:
-/// latex special chars
-/// TODO args:
-/// src: external file
-/// sty: .sty based styling 
 function wg_bt_tag( $input, $args, $parser, $frame ) {
-  global $wgBibtechSortBy;
+  // lookput asn render
 
-  if( isset( $args["sortby"] ) ) {
-    $wgBibtechSortBy = bt_str( $args["sortby"] );
-  }
-  // parse sort render
-  return bt_r_tag( bt_s_tag( bt_tag( $input ) ), $args );
+/*
+  $r = bt_l_tag( bt_tag( $input ) );
+  ob_start();
+  var_dump( $r );
+  return ob_get_clean();
+*/
+  return bt_r_tag( bt_l_tag( bt_tag( $input ) ), $args );
 }
 
-function wg_bt_m_btref( $parser, $arg1 = NULL, $arg2 = NULL ) {
+function wg_bt_m_btref( $parser, $arg1 ) {
   // render
-  return bt_r_m_btref( $parser, $arg1, $arg2 );
+  return bt_r_m_btref( $parser, $arg1 );
 }
 
+/*
+  ob_start();
+  var_dump( $r );
+  return ob_get_clean();
+*/
 ?>
