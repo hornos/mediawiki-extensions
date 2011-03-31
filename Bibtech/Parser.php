@@ -17,6 +17,22 @@ function bt_ttc( $line = "" ) {
 /// \fn bibtech_parse
 /// \brief parser
 function bt_tag( $input = NULL, $args = NULL ) {
+  $src_input = false;
+
+  if( isset( $args["src"] ) ) {
+    $src = bt_str( $args["src"] );
+    $src = __DIR__ . "/bib/" . $src;
+    if( is_readable( $src ) ) {
+      $src_input = file_get_contents( $src );
+    }
+    else {
+      return NULL;
+    }
+    if( ! $src_input )
+      return NULL;
+
+    $input = $src_input;
+  }
   $iarr  = explode( "\n", $input );
   $state = "";
   $tarr  = array();

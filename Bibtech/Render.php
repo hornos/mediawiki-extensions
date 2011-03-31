@@ -54,7 +54,7 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
   $out .= bt_r_tag_begin( $args );
 
   if( $barr == NULL ) {
-    $out .= "internal error";
+    $out .= bt_r_frm_err( bt_msg( "internal_err" ) );
   }
   else {
     // ITERATE {call.type$}

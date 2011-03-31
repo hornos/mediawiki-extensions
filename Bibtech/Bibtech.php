@@ -41,13 +41,16 @@ function wg_bt_lgm( &$magicWords, $langCode ) {
 function wg_bt_tag( $input, $args, $parser, $frame ) {
   // lookput asn render
 
-/*
-  $r = bt_l_tag( bt_tag( $input ) );
-  ob_start();
-  var_dump( $r );
-  return ob_get_clean();
-*/
-  return bt_r_tag( bt_l_tag( bt_tag( $input ) ), $args );
+  if( isset( $args["debug"] ) ) {
+    // $r = bt_l_tag( bt_tag( $input ) );
+    $r = bt_tag( $input, $args );
+    ob_start();
+    var_dump( $r );
+    return ob_get_clean();
+  }
+  else {
+    return bt_r_tag( bt_l_tag( bt_tag( $input, $args ), $args ), $args );
+  }
 }
 
 function wg_bt_m_btref( $parser, $arg1 ) {

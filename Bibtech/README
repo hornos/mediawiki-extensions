@@ -1,16 +1,34 @@
-    Bibtech is the brave new Bibtex for Mediawiki
+Bibtech is the brave new Bibtex for Mediawiki
 
-    Copyright (C) 2011  Tom Hornos
+=== USAGE EXAMPLE ===
+Lorem Ipsum is simply dummy {{#btref: ENTRY_CKEY}} text of the 
+...
+<bibtech ARGS>
+VALID BIBTEX
+</bibtech>
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
+ENTRY_CKEY is from the bibtex database
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+=== ARGS ===
+src="FILE"
+read the database from Bibtech/bib/FILE instead
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see http://www.gnu.org/licenses .
+style="STYLE"
+use the style from Bibtech/sty/STYLE (.php and .css)
+
+
+Copyright (C) 2011  Tom Hornos
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see http://www.gnu.org/licenses .
+
