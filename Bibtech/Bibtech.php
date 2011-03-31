@@ -10,6 +10,15 @@ require_once( "Render.php" );
 /// \brief lookup table for btref
 $wgBibtechBib = array();
 
+$wgExtensionCredits['parserhook'][] = array(
+    'path' => __FILE__,
+    'name' => 'Bibtech',
+    'author' => '[mailto:tom.hornos@gmail.com Tom Hornos]',
+    'url' => 'http://www.mediawiki.org/wiki/Extension:Bibtech',
+    'description' => 'Brave new Bibtex',
+    'version' => '1.0'
+);
+
 // register
 $wgExtensionCredits['validextensionclass'][] = array(
   'name'   => 'Bibtech',
