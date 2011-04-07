@@ -138,11 +138,11 @@ function bt_r_tag_begin( $args = NULL ) {
   $html = "";
 
   if( isset( $args["ol"] ) ) {
-    $html .= '<ol>';
+    $html .= '<ol class="bibtech_bibliography">';
   }
 
   if( isset( $args["ul"] ) ) {
-    $html .= '<ul>';
+    $html .= '<ul class="bibtech_bibliography">';
   }
 
   if( ! isset( $args["notitle"] ) ) {
