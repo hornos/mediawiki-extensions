@@ -4,27 +4,23 @@ if( !defined( 'MEDIAWIKI' ) ) die();
 // hard load
 require_once( "Parser.php" );
 require_once( "Render.php" );
-// autoload
 
 /// \var wgBibtechBib
 /// \brief lookup table for btref
-$wgBibtechBib = array();
+$wgBibtechBib  = array( "_bc" => 0 );
 
+/// \var wgBibtechRoot
+/// \brief default bib id
+$wgBibtechRoot = "root";
+
+// register
 $wgExtensionCredits['parserhook'][] = array(
     'path' => __FILE__,
     'name' => 'Bibtech',
     'author' => '[mailto:tom.hornos@gmail.com Tom Hornos]',
     'url' => 'http://www.mediawiki.org/wiki/Extension:Bibtech',
     'description' => 'Brave new Bibtex',
-    'version' => '1.0'
-);
-
-// register
-$wgExtensionCredits['validextensionclass'][] = array(
-  'name'   => 'Bibtech',
-  'author' => 'Tom Hornos', 
-  'url'    => '', 
-  'description' => 'Brave new bibtex'
+    'version' => '1.0.1'
 );
 
 // tag extensions
@@ -45,31 +41,37 @@ function wg_bt_lgm( &$magicWords, $langCode ) {
 }
 
 /// \fn wg_bt_tag
-/// \brief tag parser hook
-///
+/// \brief bibtech tag parser hook
 function wg_bt_tag( $input, $args, $parser, $frame ) {
-  // lookput asn render
-
+  // debug levels: tag, lookup
   if( isset( $args["debug"] ) ) {
-    // $r = bt_l_tag( bt_tag( $input ) );
-    $r = bt_tag( $input, $args );
+    $args["debug"] = bt_str( $args["debug"] );
     ob_start();
+    if( $args["debug"] == "tag" ) {
+      $r = bt_tag( $input, $args );
+    }
+    elseif( $args["debug"] == "lookup" ) {
+      $r = bt_l_tag( bt_tag( $input, $args ), $args );
+    }
+    else {
+      $r = bt_r_tag( bt_l_tag( bt_tag( $input, $args ), $args ), $args );
+    }
     var_dump( $r );
     return ob_get_clean();
   }
   else {
+    // 1. bt_tag: build bib array from bibtex
+    // 2. bt_l_tag: lookup and pick referred entries from bt_tag
+    // 3. bt_r_tag: render the result
     return bt_r_tag( bt_l_tag( bt_tag( $input, $args ), $args ), $args );
   }
 }
 
-function wg_bt_m_btref( $parser, $arg1 ) {
-  // render
-  return bt_r_m_btref( $parser, $arg1 );
+/// \fn wg_bt_m_btref
+/// \brief btref magic word hook
+function wg_bt_m_btref( $parser, $ckey, $bib = NULL ) {
+  // 1. render
+  return bt_r_m_btref( $parser, $ckey, $bib );
 }
 
-/*
-  ob_start();
-  var_dump( $r );
-  return ob_get_clean();
-*/
 ?>

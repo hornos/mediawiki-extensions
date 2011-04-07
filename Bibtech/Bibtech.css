@@ -1,13 +1,25 @@
+
+div.bibtech_bibliography {
+  margin-bottom: 25px;
+}
+
+#bodyContent h3.bibtech_headline {
+  font-weight: normal;
+  margin-bottom: 0px;
+}
+
 div.bibtech_entry_no {
   float: left;
   margin-right: 7px;
 }
 
 div.bibtech_entry {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   font-size: 90%;
+  padding-left: 5px;
 }
 
 span.bibtech_error {
   color: red;
 }
+

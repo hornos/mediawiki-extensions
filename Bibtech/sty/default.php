@@ -28,7 +28,7 @@ function bt_r_frm_year( $str ) {
 }
 
 function bt_r_frm_url( $str ) {
-  return '<a target="_new" href="' . $str . '">link</a>';
+  return '<a class="external" target="_new" href="' . $str . '">' . bt_msg( "link" ) . '</a>';
 }
 
 function bt_r_frm_volume( $str ) {

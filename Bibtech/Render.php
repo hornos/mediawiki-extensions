@@ -33,7 +33,7 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
   if( ! is_readable( __DIR__ . "/" . $sty_src ) )
     return bt_msg( "style_error" ) . ": " . $sty_src;
 
-  // hook css
+  // hook general css
   $bibtech_css     = "Bibtech.css";
   $bibtech_sty_css = "sty/" . $sty . ".css";
   if( ! is_readable( __DIR__ . "/" . $bibtech_css ) )
@@ -42,6 +42,7 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
     $__url = $wgScriptPath . "/extensions/Bibtech/" . $bibtech_css;
     $out .= '<link rel="stylesheet" type="text/css" href="' . $__url . '" />' . "\n";
   }
+  // hook style css
   if( is_readable( __DIR__ . "/" . $bibtech_sty_css ) ) {
     $__url = $wgScriptPath . "/extensions/Bibtech/" . $bibtech_sty_css;
     $out .= '<link rel="stylesheet" type="text/css" href="' . $__url . '" />' . "\n";
@@ -77,15 +78,26 @@ function bt_r_tag( $barr = NULL, $args = NULL ) {
 
 function bt_r_m_btref( $parser, $ckey, $bib = NULL ) {
   global $wgBibtechBib;
+  global $wgBibtechRoot;
+  
   $ckey = bt_str( $ckey );
   $bib  = bt_str( $bib );
   $id   = bt_eid( $ckey, $bib == NULL ? NULL : array( "bib" => $bib ) );
+  $bc   = 0;
 
-  if( $bib == NULL )
-    $bib = "page";
+  if( $bib == NULL ) {
+    $bib = $wgBibtechRoot;
+  }
 
   if( ! isset( $wgBibtechBib[$bib] ) ) {
-    $wgBibtechBib[$bib] = array( "ckeys" => array(), "c" => 1 );
+    if( $bib != $wgBibtechRoot ) {
+      ++$wgBibtechBib["_bc"];
+      $bc = $wgBibtechBib["_bc"];
+    }
+    else {
+      $bc = 0;
+    }
+    $wgBibtechBib[$bib] = array( "ckeys" => array(), "c" => 1, "bc" => $bc );
   }
 
   if( ! isset( $wgBibtechBib[$bib]["ckeys"][$ckey] ) ) {
@@ -96,7 +108,14 @@ function bt_r_m_btref( $parser, $ckey, $bib = NULL ) {
     ++$wgBibtechBib[$bib]["ckeys"][$ckey]["rc"];
   }
 
-  $out = "<a href=\"#" . $id . "\">[".$wgBibtechBib[$bib]["ckeys"][$ckey]["no"]."]</a>";
+  $no = $wgBibtechBib[$bib]["ckeys"][$ckey]["no"];
+
+/*
+  if( $bib != $wgBibtechRoot ) {
+    $link = $wgBibtechBib[$bib]["bc"] . ":" . $link;
+  }
+*/
+  $out = "<a href=\"#" . $id . "\">" . bt_r_entry_no( $no, $wgBibtechBib[$bib]["bc"] ) . "</a>";
   return $parser->insertStripItem( $out, $parser->mStripState );
   // return array( $out, 'noparse' => true, 'isHTML' => true );
 }
@@ -115,8 +134,8 @@ function bt_eid( $ckey, $args = NULL ) {
 
 function bt_r_tag_begin( $args = NULL ) {
   $id   = bt_id( $args );
-  $out  = '<div id="' . $id . "\">\n";
-  $out .= "<h3><span class=\"mw-headline\">";
+  $out  = '<div class="bibtech_bibliography" id="' . $id . "\">\n";
+  $out .= '<h3 class="bibtech_headline"><span class="mw-headline">';
   $out .= bt_msg( "bibliography" );
   $out .= "</span></h3>\n";
   return $out;
@@ -127,10 +146,12 @@ function bt_r_tag_end( $args = NULL ) {
 }
 
 function bt_r_entry_begin( $ckey, $arr = NULL, $args = NULL ) {
+  global $wgBibtechRoot;
+  $no   = bt_r_entry_no( $arr["no"], $arr["bc"] );
   $id   = bt_eid( $ckey, $args );
   $out  = '<div class="bibtech_entry">';
   $out .= "<a name=\"" . $id . "\"></a>";
-  $out .= "<div class=\"bibtech_entry_no\"><span class=\"bibtech_entry_no\">[" . $arr["no"] . "]</span></div>";
+  $out .= "<div class=\"bibtech_entry_no\"><span class=\"bibtech_entry_no\">" . $no . "</span></div>";
   $out .= "<div class=\"bibtech_entry_txt\" id=\"" . $id . "\">";
   return $out;
 }
@@ -159,6 +180,13 @@ function bt_r_frm( $tag, $str = "" ) {
   return '<span class="bibtech_' . $tag . '">' . $str . '</span>';
 }
 
+function bt_r_entry_no( $no, $bc = 0 ) {
+  return "[" . $no . ($bc == 0 ? "" : ":" . $bc) ."]";
+}
+
+function bt_r_frm_err( $str ) {
+  return '<span class="bibtech_error">' . $str . '</span>';
+}
 
 function bt_entry_r( $arr ) {
   $out = "";
@@ -169,10 +197,6 @@ function bt_entry_r( $arr ) {
     $out .= "</div>";
   }
   return $out;
-}
-
-function bt_r_frm_err( $str ) {
-  return '<span class="bibtech_error">' . $str . '</span>';
 }
 
 ?>

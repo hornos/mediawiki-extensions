@@ -1,24 +1,30 @@
 <?php
 if( !defined( 'MEDIAWIKI' ) ) die();
 
-/// \fn bibtech_str
+/// \fn bt_str
 /// \brief safe string
 function bt_str( $str = "" ) {
   return preg_replace( '/[^a-zA-Z0-9._]/', "", $str );
 }
 
-/// \fn bibtech_ttc
+/// \fn bt_num
+/// \brief safe number
+function bt_num( $str = "" ) {
+  return preg_replace( '/[^0-9.-]/', "", $str );
+}
+
+/// \fn bt_ttc
 /// \brief replace trailing coma
 function bt_ttc( $line = "" ) {
   return preg_replace( "/,[[:space:]]*$/", "", $line );
 }
 
-
-/// \fn bibtech_parse
-/// \brief parser
+/// \fn bt_tag
+/// \brief tag parser
 function bt_tag( $input = NULL, $args = NULL ) {
   $src_input = false;
 
+  // read file source
   if( isset( $args["src"] ) ) {
     $src = bt_str( $args["src"] );
     $src = __DIR__ . "/bib/" . $src;
@@ -28,9 +34,9 @@ function bt_tag( $input = NULL, $args = NULL ) {
     else {
       return NULL;
     }
-    if( ! $src_input )
+    if( ! $src_input ) {
       return NULL;
-
+    }
     $input = $src_input;
   }
   $iarr  = explode( "\n", $input );
@@ -38,8 +44,9 @@ function bt_tag( $input = NULL, $args = NULL ) {
   $tarr  = array();
   $barr  = array();
 
-  if( $input == NULL )
+  if( $input == NULL ) {
     return $input;
+  }
 
   // line by line parse
   foreach( $iarr as $line ) {
@@ -89,16 +96,19 @@ function bt_tag( $input = NULL, $args = NULL ) {
   return $barr;
 }
 
-
+/// \fn bt_l_tag
+/// \brief lookup
 function bt_l_tag( $barr = NULL, $args = NULL ) {
   global $wgBibtechBib;
+  global $wgBibtechRoot;
+
   $lbarr = array();
 
   if( $barr == NULL )
     return $barr;
 
   if( ! isset( $args["bib"] ) ) {
-    $bib = "page";
+    $bib = $wgBibtechRoot;
   }
   else {
     $bib = bt_str( $args["bib"] );
@@ -108,7 +118,10 @@ function bt_l_tag( $barr = NULL, $args = NULL ) {
     return NULL;
   }
 
+  // bc is the bibliography counter
+  $bc = $wgBibtechBib[$bib]["bc"];
   foreach( $wgBibtechBib[$bib]["ckeys"] as $ckey => $val ) {
+    $val["bc"] = $bc;
     if( ! isset( $barr[$ckey] ) ) {
       $lbarr[$ckey] = array( "type" => "missing", "ckey" => $ckey );
     }
