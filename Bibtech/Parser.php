@@ -101,7 +101,13 @@ function bt_tag( $input = NULL, $args = NULL ) {
 function bt_l_tag( $barr = NULL, $args = NULL ) {
   global $wgBibtechBib;
   global $wgBibtechRoot;
+  global $wgBibtechSortBy;
 
+  // in ref mode the lookup table will be used
+  $mode   = "ref";
+  if( $args["mode"] ) {
+    $mode = bt_str( $args["mode"] );
+  }
   $lbarr = array();
 
   if( $barr == NULL )
@@ -118,19 +124,45 @@ function bt_l_tag( $barr = NULL, $args = NULL ) {
     return NULL;
   }
 
+  // list mode
+  if( $mode == "list" ) {
+    if( isset( $args["sortby"] ) ) {
+      $wgBibtechSortBy = bt_str( $args["sortby"] );
+    }
+    uasort( $barr, "bt_cmp" );
+    return $barr;
+  }
+
+  // reference mode
   // bc is the bibliography counter
   $bc = $wgBibtechBib[$bib]["bc"];
   foreach( $wgBibtechBib[$bib]["ckeys"] as $ckey => $val ) {
-    $val["bc"] = $bc;
     if( ! isset( $barr[$ckey] ) ) {
       $lbarr[$ckey] = array( "type" => "missing", "ckey" => $ckey );
     }
     else {
       $lbarr[$ckey] = $barr[$ckey];
     }
+    // build up lookup bib
+    $val["bc"] = $bc;
     $lbarr[$ckey] = array_merge( $lbarr[$ckey], $val );
-  }
+  } // end foe
   return $lbarr;
+}
+
+/// \fn bt_cmp
+/// \brief comparator by tag
+function bt_cmp( $a, $b ) {
+  global $wgBibtechSortBy;
+  global $wgBibtechSortByOrder;
+
+  $tag = $wgBibtechSortBy;
+  $ta  = strtolower( $a[$tag] );
+  $tb  = strtolower( $b[$tag] );
+  if( $wgBibtechSortByOrder == "asc" ) {
+    return strcasecmp( $ta, $tb );
+  }
+  return strcasecmp( $tb, $ta );
 }
 
 ?>

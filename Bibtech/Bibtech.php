@@ -13,6 +13,11 @@ $wgBibtechBib  = array( "_bc" => 0 );
 /// \brief default bib id
 $wgBibtechRoot = "root";
 
+/// \var wgBibtechSortBy
+/// \brief global sortby var
+$wgBibtechSortBy = "year";
+$wgBibtechSortByOrder = "desc";
+
 // register
 $wgExtensionCredits['parserhook'][] = array(
     'path' => __FILE__,

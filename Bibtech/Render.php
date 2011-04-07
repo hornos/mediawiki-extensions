@@ -135,6 +135,9 @@ function bt_eid( $ckey, $args = NULL ) {
 function bt_r_tag_begin( $args = NULL ) {
   $id   = bt_id( $args );
   $out  = '<div class="bibtech_bibliography" id="' . $id . "\">\n";
+  if( isset( $args["notitle"] ) ) {
+    return $out;
+  }
   $out .= '<h3 class="bibtech_headline"><span class="mw-headline">';
   $out .= bt_msg( "bibliography" );
   $out .= "</span></h3>\n";
@@ -180,8 +183,11 @@ function bt_r_frm( $tag, $str = "" ) {
   return '<span class="bibtech_' . $tag . '">' . $str . '</span>';
 }
 
-function bt_r_entry_no( $no, $bc = 0 ) {
-  return "[" . $no . ($bc == 0 ? "" : ":" . $bc) ."]";
+function bt_r_entry_no( $no = 0, $bc = 0 ) {
+  if( $no == 0 ) {
+    return "";
+  }
+  return "[" . ($bc == 0 ? "" : $bc . ":" ) . $no ."]";
 }
 
 function bt_r_frm_err( $str ) {
