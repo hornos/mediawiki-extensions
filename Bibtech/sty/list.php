@@ -30,13 +30,13 @@ function bt_r_frm_volume( $str ) {
 ///     Required fields: author, title, journal, year
 ///     Optional fields: volume, number, pages, month, note, key
 function bt_r_entry_article( $arr ) {
-  $fields = array( "author", "journal", "volume", "pages", "year", "url" );
+  $fields = array( "title", "journal", "volume", "pages", "year" );
   $first  = true;
+  $pf  = "";
   $out = "";
-  $fp = "";
 
   foreach( $fields as $f ) {
-    if( ! isset( $arr[$f] ) || trim( $arr[$f] ) == "" ) {
+    if( ! isset( $arr[$f] ) || empty( $arr[$f] ) ) {
       continue;
     }
 
@@ -45,9 +45,16 @@ function bt_r_entry_article( $arr ) {
     }
     if( $f == $fields[0] ) {
       $first = false;
+      $pf = $f;
     }
 
-    $out .= bt_r_frm( $f, $arr );
+    if( $f == "title" && isset( $arr["url"] ) && ! empty( $arr["url"] ) ) {
+      $out .= bt_r_frm( $f, $arr, $arr["url"] );
+    }
+    else {
+      $out .= bt_r_frm( $f, $arr );
+    }
+
   }
   return $out;
 }

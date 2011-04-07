@@ -27,7 +27,7 @@ function bt_tag( $input = NULL, $args = NULL ) {
   // read file source
   if( isset( $args["src"] ) ) {
     $src = bt_str( $args["src"] );
-    $src = __DIR__ . "/bib/" . $src;
+    $src = __DIR__ . "/bib/" . $src . ".bib";
     if( is_readable( $src ) ) {
       $src_input = file_get_contents( $src );
     }
@@ -104,14 +104,14 @@ function bt_l_tag( $barr = NULL, $args = NULL ) {
   global $wgBibtechSortBy;
 
   // in ref mode the lookup table will be used
-  $mode   = "ref";
+  $mode = "ref";
   if( $args["mode"] ) {
     $mode = bt_str( $args["mode"] );
   }
   $lbarr = array();
 
   if( $barr == NULL )
-    return $barr;
+    return NULL;
 
   if( ! isset( $args["bib"] ) ) {
     $bib = $wgBibtechRoot;
@@ -120,7 +120,7 @@ function bt_l_tag( $barr = NULL, $args = NULL ) {
     $bib = bt_str( $args["bib"] );
   }
 
-  if( ! isset( $wgBibtechBib[$bib] ) ) {
+  if( ! isset( $wgBibtechBib[$bib] ) && $mode != "list" ) {
     return NULL;
   }
 

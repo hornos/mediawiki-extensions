@@ -135,24 +135,53 @@ function bt_eid( $ckey, $args = NULL ) {
 function bt_r_tag_begin( $args = NULL ) {
   $id   = bt_id( $args );
   $out  = '<div class="bibtech_bibliography" id="' . $id . "\">\n";
-  if( isset( $args["notitle"] ) ) {
-    return $out;
+  $html = "";
+
+  if( isset( $args["ol"] ) ) {
+    $html .= '<ol>';
   }
-  $out .= '<h3 class="bibtech_headline"><span class="mw-headline">';
-  $out .= bt_msg( "bibliography" );
-  $out .= "</span></h3>\n";
+
+  if( isset( $args["ul"] ) ) {
+    $html .= '<ul>';
+  }
+
+  if( ! isset( $args["notitle"] ) ) {
+    $out .= '<h3 class="bibtech_headline"><span class="mw-headline">';
+    $out .= bt_msg( "bibliography" );
+    $out .= "</span></h3>\n";
+  }
+  // html list
+  $out .= $html;
   return $out;
 }
 
 function bt_r_tag_end( $args = NULL ) {
-  return "</div>";
+  $html = "";
+  if( isset( $args["ul"] ) ) {
+    $html .= '</ul>';
+  }
+
+  if( isset( $args["ol"] ) ) {
+    $html .= '</ol>';
+  }
+
+  $out  = $html;
+  $out .= "</div>";
+  return $out;
 }
 
 function bt_r_entry_begin( $ckey, $arr = NULL, $args = NULL ) {
   global $wgBibtechRoot;
+  $html = "";
+  if( isset( $args["ul"] ) ) {
+    $html = '<li>';
+  }
+
   $no   = bt_r_entry_no( $arr["no"], $arr["bc"] );
   $id   = bt_eid( $ckey, $args );
-  $out  = '<div class="bibtech_entry">';
+  $out  = "";
+  $out  = $html;
+  $out .= '<div class="bibtech_entry">';
   $out .= "<a name=\"" . $id . "\"></a>";
   $out .= "<div class=\"bibtech_entry_no\"><span class=\"bibtech_entry_no\">" . $no . "</span></div>";
   $out .= "<div class=\"bibtech_entry_txt\" id=\"" . $id . "\">";
@@ -160,7 +189,13 @@ function bt_r_entry_begin( $ckey, $arr = NULL, $args = NULL ) {
 }
 
 function bt_r_entry_end( $ckey, $arr = NULL, $args = NULL ) {
-  return "</div></div>\n";
+  $html = "";
+  if( isset( $args["ul"] ) ) {
+    $html = '</li>';
+  }
+  $out  = "</div></div>";
+  $out .= $html . "\n";
+  return $out;
 }
 
 function bt_r_entry( $ckey, $arr = None ) {
@@ -173,12 +208,16 @@ function bt_r_entry( $ckey, $arr = None ) {
   return call_user_func_array( $efunc, array( $arr ) );
 }
 
-function bt_r_frm( $tag, $str = "" ) {
+function bt_r_frm( $tag, $arr = NULL, $url = NULL ) {
   $tag = bt_str( $tag );
+  $str = $arr[$tag];
   // custom formatting
   $ffunc = "bt_r_frm_" . $tag;
   if( function_exists( $ffunc ) ) {
     $str = call_user_func_array( $ffunc, array( $str ) );
+  }
+  if( $url != NULL ) {
+    $str = '<a class="external" target="_new" href="' . $url . '">' . $str . '</a>';
   }
   return '<span class="bibtech_' . $tag . '">' . $str . '</span>';
 }
