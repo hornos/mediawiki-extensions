@@ -105,7 +105,7 @@ function bt_l_tag( $barr = NULL, $args = NULL ) {
 
   // in ref mode the lookup table will be used
   $mode = "ref";
-  if( $args["mode"] ) {
+  if( isset( $args["mode"] ) ) {
     $mode = bt_str( $args["mode"] );
   }
   $lbarr = array();
