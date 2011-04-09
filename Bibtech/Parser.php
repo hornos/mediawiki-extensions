@@ -67,7 +67,8 @@ function bt_tag( $input = NULL, $args = NULL ) {
       // redundancy: need for sort
       $tarr["ckey"] = $ckey;
       $state = "entry";
-
+      $tarr["bc"] = 0;
+      $tarr["no"] = 0;
       continue;
     }
 
@@ -76,7 +77,6 @@ function bt_tag( $input = NULL, $args = NULL ) {
       $barr[$ckey] = $tarr;
       $tarr = array();
       $state = "";
-
       continue;
     }
 

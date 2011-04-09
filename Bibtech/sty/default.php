@@ -33,14 +33,13 @@ function bt_r_entry_article( $arr ) {
   $fields = array( "author", "journal", "volume", "pages", "year", "url" );
   $first  = true;
   $out = "";
-  $fp = "";
 
   foreach( $fields as $f ) {
     if( ! isset( $arr[$f] ) || trim( $arr[$f] ) == "" ) {
       continue;
     }
 
-    if( ! $first && $pf != "author" ) {
+    if( ! $first && $f != "author" ) {
       $out .= ", ";
     }
     if( $f == $fields[0] ) {
