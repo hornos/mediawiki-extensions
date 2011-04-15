@@ -3,9 +3,17 @@ if( !defined( 'MEDIAWIKI' ) ) die();
 
 /// custom
 function bt_r_frm_author( $str ) {
-  $str = preg_replace( "/[[:space:]]*,[[:space:]]*/", " ", $str );
-  $str = preg_replace( "/[[:space:]]+and[[:space:]]+/", ", ", $str );
-  $str = preg_replace( "/[\'\\\]/", "", $str );
+  $str  = preg_replace( "/[[:space:]]*,[[:space:]]*/", " ", $str );
+  $str  = preg_replace( "/[[:space:]]+and[[:space:]]+/", ",", $str );
+  $str  = preg_replace( "/[\'\\\]/", "", $str );
+  $sarr = explode( ",", $str );
+  foreach( $sarr as $n ) {
+    $narr = explode( " ", $n );
+    $tmp  = $narr[0];
+    $narr[0] = $narr[1];
+    $narr[1] = $tmp;
+  }
+  $str = implode( ", ", $sarr );
   return $str;
 }
 
