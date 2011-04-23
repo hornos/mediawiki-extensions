@@ -27,7 +27,9 @@ function bt_tag( $input = NULL, $args = NULL ) {
   // read file source
   if( isset( $args["src"] ) ) {
     $src = bt_str( $args["src"] );
-    $src = __DIR__ . "/bib/" . $src . ".bib";
+    $src = $src . ".bib";
+    $src = wfFindFile( $src );
+    $src = $src->getPath();
     if( is_readable( $src ) ) {
       $src_input = file_get_contents( $src );
     }
